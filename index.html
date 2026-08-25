@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SmartHome Enterprise | ESP32 Controller</title>
+  <meta name="description" content="Enterprise Smart Home Automation Controller for ESP32 with direct real-time WebSocket protocol." />
+  
+  <!-- Modern Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient Backdrop -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <!-- Main Layout -->
+  <div class="app-layout">
+
+    <!-- Desktop Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9,22 9,12 15,12 15,22"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">SmartHome</span>
+            <span class="brand-badge">PRO v3.0</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-btn active" data-page="overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="#" class="nav-btn" data-page="lights">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span>Lights (6 Ch)</span>
+        </a>
+        <a href="#" class="nav-btn" data-page="fans-ac">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2-2 5-2 7 0s2 5 0 7-5 2-7 0"/><path d="M12 12c-2 2-2 5 0 7s5 2 7 0 2-5 0-7"/><path d="M12 12c-2-2-5-2-7 0s-2 5 0 7 5 2 7 0"/><circle cx="12" cy="12" r="2"/></svg>
+          <span>Fans &amp; AC</span>
+        </a>
+        <a href="#" class="nav-btn" data-page="appliances">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="8" y1="6" x2="8" y2="6.01"/><line x1="8" y1="14" x2="8" y2="14.01"/></svg>
+          <span>Fridge &amp; IR</span>
+        </a>
+        <a href="#" class="nav-btn" data-page="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>System &amp; Auth</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="device-badge" id="sidebarStatus">
+          <span class="live-dot" id="liveDot"></span>
+          <span class="live-label" id="liveLabel">ESP32 Online</span>
+        </div>
+        <div class="user-pill">
+          <div class="avatar">AD</div>
+          <div class="user-meta">
+            <span class="user-title">Admin Danish</span>
+            <span class="user-sub">Primary Controller</span>
+          </div>
+          <button class="logout-btn" id="logoutBtn" title="Lock Dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+
+      <!-- Header Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 class="view-title" id="viewTitle">System Overview</h1>
+          <p class="view-subtitle" id="viewSubtitle">12 Hardware Channels • Real-Time Telemetry</p>
+        </div>
+        <div class="topbar-right">
+          <div class="header-stat">
+            <span class="header-stat-val" id="headerTemp">--°C</span>
+            <span class="header-stat-lbl">DHT Temp</span>
+          </div>
+          <div class="header-stat">
+            <span class="header-stat-val" id="headerHumi">--%</span>
+            <span class="header-stat-lbl">Humidity</span>
+          </div>
+          <div class="clock-badge" id="clockDisplay">12:00:00</div>
+        </div>
+      </header>
+
+      <div class="content-body">
+
+        <!-- ========================================================
+             PAGE 1: OVERVIEW (MASTER MATRIX)
+             ======================================================== -->
+        <section class="page active" id="page-overview">
+          
+          <!-- Key Metrics Grid -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon icon-cyan">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-num" id="statTemp">--°C</span>
+                <span class="stat-name">DHT Sensor (Pin 16)</span>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon icon-blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-num" id="statHumi">--%</span>
+                <span class="stat-name">Humidity (Pin 16)</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-num" id="activeRelaysCount">0 / 12</span>
+                <span class="stat-name">Active Relays</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-emerald">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              </div>
+              <div class="stat-data">
+                <span class="stat-num" id="statLatency">&lt; 15 ms</span>
+                <span class="stat-name">WebSocket Latency</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Master Control & LCD Simulator Row -->
+          <div class="grid-2col">
+            
+            <!-- Master Action Controls -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>Master Controls</h3>
+                </div>
+                <span class="head-tag">Quick Action</span>
+              </div>
+              <div class="master-btn-grid">
+                <button class="action-btn" id="btnMasterAllLights">
+                  <div class="action-icon">💡</div>
+                  <div class="action-info">
+                    <span class="action-title">All Lights</span>
+                    <span class="action-sub">Toggle 6 Relays</span>
+                  </div>
+                  <span class="action-state" id="lblAllLights">OFF</span>
+                </button>
+
+                <button class="action-btn" id="btnMasterAllFans">
+                  <div class="action-icon">🌀</div>
+                  <div class="action-info">
+                    <span class="action-title">All Fans</span>
+                    <span class="action-sub">Toggle 4 Relays</span>
+                  </div>
+                  <span class="action-state" id="lblAllFans">OFF</span>
+                </button>
+
+                <button class="action-btn" id="btnMasterAC">
+                  <div class="action-icon">❄️</div>
+                  <div class="action-info">
+                    <span class="action-title">AC Unit</span>
+                    <span class="action-sub">Relay Pin 33</span>
+                  </div>
+                  <span class="action-state" id="lblMasterAC">OFF</span>
+                </button>
+
+                <button class="action-btn" id="btnTriggerIR">
+                  <div class="action-icon">📡</div>
+                  <div class="action-info">
+                    <span class="action-title">Send IR Burst</span>
+                    <span class="action-sub">Transmitter Pin 17</span>
+                  </div>
+                  <span class="action-state action-pulse">TRANSMIT</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- I2C LCD Display Live Mirror -->
+            <div class="glass-card lcd-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>I2C LCD 16x2 Display</h3>
+                </div>
+                <span class="head-tag">SDA 21 • SCL 22</span>
+              </div>
+              <div class="lcd-screen-wrapper">
+                <div class="lcd-bezel">
+                  <div class="lcd-matrix">
+                    <div class="lcd-line" id="lcdLine1">SmartHome Online</div>
+                    <div class="lcd-line" id="lcdLine2">IP: 192.168.0.100</div>
+                  </div>
+                </div>
+              </div>
+              <div class="lcd-info-row">
+                <span>Address: <code>0x27 (or 0x3F)</code></span>
+                <span>Pins: <code>GPIO 21 (SDA) • GPIO 22 (SCL)</code></span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- All 12 Hardware Relays Matrix -->
+          <div class="glass-card mt-4">
+            <div class="card-head">
+              <div class="head-title">
+                <span class="dot-indicator"></span>
+                <h3>Hardware Relay Matrix (12 Channels)</h3>
+              </div>
+              <span class="head-tag">Active LOW Relays</span>
+            </div>
+            
+            <div class="relays-grid" id="allRelaysGrid">
+              <!-- Dynamically Populated by app.js -->
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================================
+             PAGE 2: LIGHTS (6 CHANNELS)
+             ======================================================== -->
+        <section class="page" id="page-lights">
+          <div class="page-intro">
+            <h2>Lighting Control (6 Relay Channels)</h2>
+            <p>Control individual relays for Living Room, Bedroom, Hallway, Kitchen, and RGB Accent.</p>
+          </div>
+
+          <div class="relays-grid" id="lightsGrid">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- RGB Light Special Card (Pin 5) -->
+          <div class="glass-card mt-4">
+            <div class="card-head">
+              <div class="head-title">
+                <span class="dot-indicator"></span>
+                <h3>RGB Light Controller (Pin 5)</h3>
+              </div>
+              <span class="head-tag">Mood Illumination</span>
+            </div>
+            <div class="rgb-controller-body">
+              <div class="color-palette">
+                <button class="color-dot active" style="--c:#3b82f6" data-color="#3b82f6"></button>
+                <button class="color-dot" style="--c:#00f2fe" data-color="#00f2fe"></button>
+                <button class="color-dot" style="--c:#10b981" data-color="#10b981"></button>
+                <button class="color-dot" style="--c:#f59e0b" data-color="#f59e0b"></button>
+                <button class="color-dot" style="--c:#ec4899" data-color="#ec4899"></button>
+                <button class="color-dot" style="--c:#8b5cf6" data-color="#8b5cf6"></button>
+                <button class="color-dot" style="--c:#ffffff" data-color="#ffffff"></button>
+              </div>
+              <div class="rgb-preview" id="rgbPreview"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             PAGE 3: FANS & CLIMATE (5 CHANNELS)
+             ======================================================== -->
+        <section class="page" id="page-fans-ac">
+          <div class="page-intro">
+            <h2>Fans &amp; Air Conditioning</h2>
+            <p>Direct relay switching for 4 high-speed fans &amp; AC unit with temperature telemetry.</p>
+          </div>
+
+          <div class="grid-2col">
+            <!-- AC Interactive Thermostat -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>Air Conditioner (Relay Pin 33)</h3>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="acRelayToggle" />
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="thermo-dial-container">
+                <div class="thermo-dial">
+                  <span class="thermo-val" id="acDisplayTemp">24°C</span>
+                  <span class="thermo-lbl">Target Cooling</span>
+                </div>
+                <div class="thermo-controls">
+                  <button class="dial-btn" id="btnTempDown">−</button>
+                  <span class="thermo-curr">Current DHT: <b id="acLiveDht">24°C</b></span>
+                  <button class="dial-btn" id="btnTempUp">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fans Matrix -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>Fan Relays (4 Channels)</h3>
+                </div>
+                <span class="head-tag">Pins 13, 4, 14, 32</span>
+              </div>
+              <div class="relays-grid" id="fansGrid">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             PAGE 4: APPLIANCES (FRIDGE & IR)
+             ======================================================== -->
+        <section class="page" id="page-appliances">
+          <div class="page-intro">
+            <h2>Appliances &amp; IR Transmitter</h2>
+            <p>Refrigerator relay control and infrared transmitter controller.</p>
+          </div>
+
+          <div class="grid-2col">
+            <!-- Fridge Relay (Pin 18) -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>Fridge Relay (Pin 18)</h3>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="fridgeToggle" checked />
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="appliance-hero">
+                <div class="appliance-icon">🧊</div>
+                <div class="appliance-meta">
+                  <h4 id="fridgeStatus">Fridge Power: ACTIVE</h4>
+                  <p>Keeps refrigerator cooling active 24/7 on GPIO 18</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- IR Transmitter (Pin 17) -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>IR Remote Transmitter (Pin 17)</h3>
+                </div>
+                <span class="head-tag">Transistor Base (470Ω)</span>
+              </div>
+              <div class="ir-remote-box">
+                <p class="ir-desc">Transmits 38kHz modulated infrared pulse through GPIO 17 transistor circuit.</p>
+                <div class="ir-buttons-grid">
+                  <button class="ir-cmd-btn" data-cmd="POWER">⚡ Power</button>
+                  <button class="ir-cmd-btn" data-cmd="VOL_UP">🔊 Vol +</button>
+                  <button class="ir-cmd-btn" data-cmd="VOL_DN">🔉 Vol −</button>
+                  <button class="ir-cmd-btn" data-cmd="MODE">🔄 Mode</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================
+             PAGE 5: SYSTEM SETTINGS & PASSWORD RESET
+             ======================================================== -->
+        <section class="page" id="page-settings">
+          <div class="page-intro">
+            <h2>System Settings &amp; Security</h2>
+            <p>Manage dashboard access password, WebSocket connection, and live ESP32 hardware diagnostics.</p>
+          </div>
+
+          <div class="grid-2col">
+
+            <!-- Password Reset Card -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>Reset Dashboard Password</h3>
+                </div>
+                <span class="head-tag">Security</span>
+              </div>
+              <form id="changePasswordForm" class="form-body">
+                <div class="input-group">
+                  <label>Current Password</label>
+                  <input type="password" id="curPass" class="text-input" placeholder="Current password" required />
+                </div>
+                <div class="input-group">
+                  <label>New Password</label>
+                  <input type="password" id="newPass" class="text-input" placeholder="Enter new password" required />
+                </div>
+                <div class="input-group">
+                  <label>Confirm New Password</label>
+                  <input type="password" id="confirmPass" class="text-input" placeholder="Confirm new password" required />
+                </div>
+                <div id="passMsg" class="form-msg"></div>
+                <button type="submit" class="btn-primary full-width">🔒 Update Password</button>
+              </form>
+            </div>
+
+            <!-- WebSocket Connection Card -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>Server WebSocket Gateway</h3>
+                </div>
+                <span class="head-tag">Port 8888</span>
+              </div>
+              <div class="form-body">
+                <div class="input-group">
+                  <label>Server Endpoint</label>
+                  <input type="text" id="wsServerInput" class="text-input" readonly />
+                </div>
+                <div class="input-group">
+                  <label>Auth Security Token</label>
+                  <input type="text" id="wsTokenInput" class="text-input" value="my-secret-esp32-token" readonly />
+                </div>
+                <div class="conn-status-banner">
+                  <span class="status-pill online" id="wsBadge">● Gateway Active</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- MFA / 2FA Security Card -->
+            <div class="glass-card">
+              <div class="card-head">
+                <div class="head-title">
+                  <span class="dot-indicator"></span>
+                  <h3>Multi-Factor Authentication (MFA / 2FA)</h3>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="mfaToggle" checked />
+                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                </label>
+              </div>
+              <div class="form-body">
+                <p style="font-size:13px; color:var(--text-muted);">
+                  Require a 6-digit verification code / Authenticator OTP when signing in from any device.
+                </p>
+                <div class="input-group">
+                  <label>Master Security / Backup 6-Digit PIN</label>
+                  <div style="display:flex; gap:10px;">
+                    <input type="password" id="mfaPinInput" class="text-input" value="123456" maxlength="6" style="letter-spacing: 4px; font-family:'JetBrains Mono',monospace;" />
+                    <button class="btn-primary" id="btnSaveMfaPin" style="padding: 10px 16px; white-space:nowrap;">Save PIN</button>
+                  </div>
+                </div>
+                <div class="mfa-secret-box" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:12px 14px; border-radius:var(--radius-sm); margin-top:4px;">
+                  <span style="font-size:11px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Authenticator Secret Key</span>
+                  <div style="font-family:'JetBrains Mono',monospace; color:var(--cyan); font-size:13px; margin-top:4px; font-weight:700;">JBSWY3DPEHPK3PXP</div>
+                  <span style="font-size:11px; color:var(--text-muted); margin-top:2px; display:block;">Compatible with Google Authenticator, Microsoft Authenticator &amp; Authy</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ESP32 Hardware Diagnostics -->
+          <div class="glass-card mt-4">
+            <div class="card-head">
+              <div class="head-title">
+                <span class="dot-indicator"></span>
+                <h3>ESP32 Hardware Diagnostics</h3>
+              </div>
+              <button class="btn-outline-sm" id="btnRefreshDiag">🔄 Refresh</button>
+            </div>
+            <div class="diag-grid">
+              <div class="diag-item"><span class="diag-k">Microcontroller</span><span class="diag-v">ESP32 Dev Module (WROOM-32)</span></div>
+              <div class="diag-item"><span class="diag-k">Relays Configured</span><span class="diag-v">12 Channels (Active LOW)</span></div>
+              <div class="diag-item"><span class="diag-k">DHT Sensor</span><span class="diag-v">GPIO 16 (DHT11/DHT22)</span></div>
+              <div class="diag-item"><span class="diag-k">IR Transmitter</span><span class="diag-v">GPIO 17 (NPN Transistor)</span></div>
+              <div class="diag-item"><span class="diag-k">LCD Pins</span><span class="diag-v">SDA: GPIO 21 • SCL: GPIO 22</span></div>
+              <div class="diag-item"><span class="diag-k">Firmware Protocol</span><span class="diag-v">Native RFC-6455 WebSocket</span></div>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar (App Experience) -->
+  <nav class="mobile-nav">
+    <button class="mobile-nav-btn active" data-page="overview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Overview</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="lights">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+      <span>Lights</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="fans-ac">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2-2 5-2 7 0s2 5 0 7-5 2-7 0"/><circle cx="12" cy="12" r="2"/></svg>
+      <span>Fans/AC</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="appliances">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/></svg>
+      <span>Fridge/IR</span>
+    </button>
+    <button class="mobile-nav-btn" data-page="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- Login Modal Overlay (With Multi-Factor Authentication MFA) -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-modal">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h2>SmartHome Portal</h2>
+        <p id="authSubtitle">Enterprise 2-Factor Security</p>
+      </div>
+
+      <!-- Step 1: Username & Password -->
+      <form id="authFormStep1" class="auth-form">
+        <div class="input-group">
+          <label>Username</label>
+          <input type="text" id="authUser" class="text-input" placeholder="admin" required autocomplete="username" />
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="authPass" class="text-input" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <div id="authError1" class="auth-error">❌ Invalid username or password</div>
+        <button type="submit" class="btn-primary full-width" style="padding: 13px;">Next: Verify MFA ➔</button>
+      </form>
+
+      <!-- Step 2: 6-Digit MFA Verification Code -->
+      <form id="authFormStep2" class="auth-form" style="display:none;">
+        <div class="mfa-badge-row">
+          <span class="mfa-shield-icon">🛡️</span>
+          <div style="display:flex; flex-direction:column; text-align:left;">
+            <strong style="font-size:13px; color:#fff;">Two-Factor Authentication</strong>
+            <span style="font-size:11px; color:var(--text-dim);">Enter 6-digit Authenticator OTP or Security PIN</span>
+          </div>
+        </div>
+        
+        <div class="mfa-digits-container">
+          <input type="text" class="mfa-box" maxlength="1" autofocus />
+          <input type="text" class="mfa-box" maxlength="1" />
+          <input type="text" class="mfa-box" maxlength="1" />
+          <input type="text" class="mfa-box" maxlength="1" />
+          <input type="text" class="mfa-box" maxlength="1" />
+          <input type="text" class="mfa-box" maxlength="1" />
+        </div>
+
+        <div id="authError2" class="auth-error">❌ Invalid 6-digit MFA security code</div>
+        <button type="submit" class="btn-primary full-width" style="padding: 13px;">🔓 Authorize &amp; Enter</button>
+        <button type="button" id="btnBackToStep1" class="btn-outline-sm" style="margin-top:6px;">← Back to login</button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
