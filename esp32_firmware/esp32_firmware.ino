@@ -64,7 +64,7 @@ const char* DEVICE_NAME   = "Main Controller";
 
 // Temperature & Humidity (DHT)
 #define PIN_DHT                16
-#define DHTTYPE                DHT22 // Change to DHT11 if using blue DHT11
+#define DHTTYPE                DHT11 // Blue DHT11 sensor (from photo)
 
 // 12 Relay Channels
 #define PIN_FAN_1              13
