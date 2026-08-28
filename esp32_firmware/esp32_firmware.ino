@@ -42,8 +42,8 @@
 const char* WIFI_SSID     = "YOUR_WIFI_NAME";
 const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD"; // Note: WiFi default from sheet is 12345678
 
-// Server Details — local LAN IP (ESP32 connects directly over your home Wi-Fi)
-const char* SERVER_HOST   = "192.168.0.100";
+// Server Details — Public Server IP (allows ESP32 at home to connect over internet)
+const char* SERVER_HOST   = "162.211.121.130";
 const int   SERVER_PORT   = 8888;
 const char* SECRET_TOKEN  = "my-secret-esp32-token";
 
